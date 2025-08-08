@@ -17,7 +17,6 @@ int main(){
     f = numeros reales como el float
     Para limitar el numeros de decimales: %.2f. El .2 serian la cantidad de deciamles que queremos
     */
-   
     printf("%f\n", d);
     return 0;
 }
