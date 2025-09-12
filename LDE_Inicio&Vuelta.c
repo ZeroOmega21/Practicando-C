@@ -46,13 +46,37 @@ void imprimirLista(Nodo *lista){
     printf("NULL \n");
 }
 
-void insertarOrdenado(Nodo** lista, int elemento) {
-    Nodo* nuevo = crearNodo(elemento);
-
-    if (*lista == NULL || (*lista)->elemento >= elemento) {
-        nuevo->next = *lista;
-        *lista = nuevo;
+void ImprimirListaInvertida(Nodo *lista) {
+    if (lista == NULL) {
+        printf("NULL\n");
         return;
+    }
+    // Moverse al final de la lista
+    Nodo *temp = lista;
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+    // Imprimir la lista en orden inverso
+    while (temp != NULL) {
+        printf("%d->", temp->elemento);
+        temp = temp->prev;
+    }
+    printf("NULL\n");
+}
+
+void insertarOrdenado(Nodo** lista) {
+    if (lista == NULL){
+        printf("La lista esta vacia\n");
+        return;
+    }
+    Nodo *ultimo = *lista;
+    while (ultimo->next != NULL){
+        ultimo = ultimo->next;
+    }
+    while (ultimo != NULL)
+    {
+        printf("%d->", ultimo->elemento);
+        ultimo = ultimo->prev;
     }
 }
 
@@ -63,6 +87,9 @@ int main(){
         Nodo *newNodo = CrearNodo(elementos[i]);
         enlazarNodo(&head, newNodo);
     }
+    printf("Lista en original: ");
     imprimirLista(head);
-    return 0;
+
+    printf("Lista en reversa: ");
+    ImprimirListaInvertida(head);
 }
