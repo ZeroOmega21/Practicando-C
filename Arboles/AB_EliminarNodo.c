@@ -62,7 +62,7 @@ void RecorrerArbolEnOrden(Nodo *arbol){
     }
 }
 
-//encontrar valores minimos y mnaximos
+//encontrar valores minimos y maximos
 Nodo *MinimoValorNodo(Nodo *nodo){
     Nodo *actual = nodo;
     while (actual && actual -> left != NULL){
@@ -80,110 +80,153 @@ Nodo *MaximoValorNodo(Nodo *nodo){
 }
 
 //Metodos de eliminar datos del arbol
-
 Nodo *EliminarNodoHoja(Nodo *raiz, int dato){
-    Nodo *resultado = BuscarDato(raiz, dato);
-    Nodo *temp = resultado;
-    if (resultado != NULL) {
-        if (resultado -> left == NULL && resultado -> right == NULL){
-            free(temp);
-            resultado = NULL;
+    //buscar el nodo a eliminar
+    if (dato < raiz->clave) {
+        raiz->left = EliminarNodoHoja(raiz->left, dato);
+    } else if (dato > raiz->clave) {
+        raiz->right = EliminarNodoHoja(raiz->right, dato);
+    } else {
+        if (raiz->left == NULL && raiz->right == NULL) {
+            free(raiz);
+            return NULL;
         }
     }
     return raiz;
 }
 
 Nodo *EliminarNodoConHijos(Nodo *raiz, int dato){
-    Nodo *resultado = BuscarDato(raiz, dato);
-    Nodo *temp = resultado;
-    if (resultado != NULL) {
-        if (resultado -> left != NULL){
-            resultado -> left = NULL;
+    if (dato < raiz->clave) {
+        raiz->left = EliminarNodoConHijos(raiz->left, dato);
+    } else if (dato > raiz->clave) {
+        raiz->right = EliminarNodoConHijos(raiz->right, dato);
+    } else {
+        // Nodo encontrado
+        if (raiz->left == NULL) {
+            Nodo *temp = raiz->right;
+            free(raiz);
+            return temp;
+        } else if (raiz->right == NULL) {
+            Nodo *temp = raiz->left;
+            free(raiz);
+            return temp;
+        } else {
+            Nodo *minimo = MinimoValorNodo(raiz->right);
+            raiz->clave = minimo->clave;
+            raiz->right = EliminarNodoConHijos(raiz->right, minimo->clave);
         }
-        if (resultado -> right != NULL){
-            resultado -> right = NULL;
-        }
-        free(temp);
     }
     return raiz;
 }
 
 Nodo *ElimninarNodoConUnHijo(Nodo *raiz, int dato){
-    Nodo *resultado = BuscarDato(raiz, dato);
-    Nodo *temp = resultado;
-    if (resultado != NULL) {
-        if (resultado -> left != NULL){
-            resultado -> left = resultado -> left;
-        }
-        if (resultado -> right != NULL){
-            resultado -> right = resultado -> right;
-        }
-        free(temp);
+    if (dato < raiz->clave) {
+        raiz->left = ElimninarNodoConUnHijo(raiz->left, dato);
+    } else if (dato > raiz->clave) {
+        raiz->right = ElimninarNodoConUnHijo(raiz->right, dato);
+    } else {
+        // Nodo encontrado
+        Nodo *child = (raiz->left != NULL) ? raiz->left : raiz->right;
+        free(raiz);
+        return child;
     }
     return raiz;
 }
 
-Nodo *EliminarNodoRaiz(Nodo *raiz, int dato){
-    Nodo *resultado = BuscarDato(raiz, dato);
-    Nodo *temp = resultado;
-    if (resultado != NULL) {
-        if (resultado -> left != NULL && resultado -> right != NULL){
-            Nodo *minimo = MinimoValorNodo(resultado -> right);
-            resultado -> clave = minimo -> clave;
-            resultado -> right = EliminarNodoHoja(resultado -> right, minimo -> clave);
-        } else if (resultado -> left != NULL){
-            resultado = resultado -> left;
-        } else if (resultado -> right != NULL){
-            resultado = resultado -> right;
+Nodo *EliminarNodoRaiz(Nodo *raiz){
+    if (raiz == NULL) return NULL;
+    // Si la raíz tiene dos hijos
+    if (raiz->left != NULL && raiz->right != NULL) {
+        // Buscar el mínimo del subárbol derecho (el sucesor)
+        Nodo *minimo = MinimoValorNodo(raiz->right);
+        // Si el mínimo es el hijo derecho directo
+        if (raiz->right == minimo) {
+            minimo->left = raiz->left;
+            free(raiz);
+            return minimo;
         } else {
-            resultado = NULL;
+            // Buscar el padre del mínimo
+            Nodo *padre = raiz->right;
+            while (padre->left != NULL && padre->left != minimo) {
+                padre = padre->left;
+            }
+            // Eliminar el mínimo del subárbol derecho
+            if (padre->left == minimo) {
+                padre->left = minimo->right;
+            }
+            minimo->left = raiz->left;
+            minimo->right = raiz->right;
+            free(raiz);
+            return minimo;
         }
-        free(temp);
+    } else {
+        // Si tiene un solo hijo o ninguno, el hijo pasa a ser la nueva raíz
+        Nodo *nuevo_raiz = (raiz->left != NULL) ? raiz->left : raiz->right;
+        free(raiz);
+        return nuevo_raiz;
     }
-    return raiz;
 }
 
 //Metodo para eliminar un nodo cualquiera
 Nodo *EliminarNodo(Nodo *raiz, int dato){
-    //Si el nodo a eliminar es la raiz
-    if (raiz != NULL && dato == raiz->clave){
-        return EliminarNodoRaiz(raiz, dato);
+    // Verificar si el numero existe en el arbol
+    Nodo *NumeroExiste = BuscarDato(raiz, dato);
+    // Si el numero no existe en el arbol
+    if (NumeroExiste == NULL){
+        printf("El numero %d no existe en el arbol \n", dato);
+        return raiz;
+    }    
+    // Si el numero si existe en el arbol
+    else {
+        printf("El numero %d si existe en el arbol \n", dato);
+        // Si el nodo a eliminar es la raiz
+        if (raiz != NULL && dato == raiz->clave){
+            Nodo *nuevo_raiz = EliminarNodoRaiz(raiz);
+            RecorrerArbolEnOrden(nuevo_raiz);
+            return nuevo_raiz;
+        }
+        Nodo *resultado = BuscarDato(raiz, dato);
+        if (resultado != NULL) {
+            // Si el nodo a eliminar es una hoja
+            if (resultado->left == NULL && resultado->right == NULL){
+                Nodo *nuevo_raiz = EliminarNodoHoja(raiz, dato);
+                RecorrerArbolEnOrden(nuevo_raiz);
+                return nuevo_raiz;
+            }
+            // Si el nodo a eliminar tiene dos hijos
+            else if (resultado->left != NULL && resultado->right != NULL){
+                Nodo *nuevo_raiz = EliminarNodoConHijos(raiz, dato);
+                RecorrerArbolEnOrden(nuevo_raiz);
+                return nuevo_raiz;
+            }
+            // Si el nodo a eliminar tiene un hijo
+            else if (resultado->left != NULL || resultado->right != NULL){
+                Nodo *nuevo_raiz = ElimninarNodoConUnHijo(raiz, dato);
+                RecorrerArbolEnOrden(nuevo_raiz);
+                return nuevo_raiz;
+            }
+        }
+        return raiz;
     }
-    Nodo *resultado = BuscarDato(raiz, dato);
-    if (resultado != NULL) {
-        //Si el nodo a eliminar es una hoja
-        if (resultado -> left == NULL && resultado -> right == NULL){
-            return EliminarNodoHoja(raiz, dato);
-        }
-        //Si el nodo a eliminar tiene dos hijos
-        else if (resultado -> left != NULL && resultado -> right != NULL){
-            return EliminarNodoConHijos(raiz, dato);
-        }
-        //Si el nodo a eliminar tiene un hijo
-        else if (resultado -> left != NULL || resultado -> right != NULL){
-            return ElimninarNodoConUnHijo(raiz, dato);
-        }
-    }
-    return raiz;
 }
 
 //Metodo MAIN
 int main(void){
     int arbol[14]={100, 50, 1, 55, 70, 120, 110, 105, 115, 140, 135, 132, 136, 145};
     Nodo *Arbol = NULL;
+    //crear el arbol en el for
     for (int i = 0; i < 14; i++){
         Arbol = InsetarDato(Arbol, arbol[i]);
     }
 
     RecorrerArbolEnOrden(Arbol);
-    Nodo *resultado = BuscarDato(Arbol, 66);
+    Nodo *resultado = BuscarDato(Arbol, 145);
+    //if si el dato fue encontrado o no
     if (resultado != NULL){
-        printf("El dato %d fue encontrado en el arbol \n", resultado -> clave);
+        printf("El numero %d fue encontrado en el arbol \n", resultado -> clave);
     } else {
-        printf("El dato no fue encontrado en el arbol \n");
-    } 
-
-    Arbol = EliminarNodo(Arbol, 145);
-    printf("Despues de eliminar el nodo 145 \n");
-    RecorrerArbolEnOrden(Arbol);
+        printf("El numero no fue encontrado en el arbol \n");
+    }
+    //Llamar a la funcion de eliminar nodo con los parametros del arbol y el dato a eliminar
+    Arbol = EliminarNodo(Arbol, 5);
 }
