@@ -217,6 +217,7 @@ int main(void){
 
     RecorrerArbolEnOrden(Arbol);
     Nodo *resultado = BuscarDato(Arbol, 145);
+    //Verificar si el numero existe en el arbol o no
     if (resultado != NULL){
         printf("El numero %d fue encontrado en el arbol \n", resultado -> clave);
     } else {
