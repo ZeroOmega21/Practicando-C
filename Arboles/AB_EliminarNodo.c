@@ -169,15 +169,11 @@ Nodo *EliminarNodoRaiz(Nodo *raiz){
 
 //Metodo para eliminar un nodo cualquiera
 Nodo *EliminarNodo(Nodo *raiz, int dato){
-    // Verificar si el numero existe en el arbol
     Nodo *NumeroExiste = BuscarDato(raiz, dato);
-    // Si el numero no existe en el arbol
     if (NumeroExiste == NULL){
         printf("El numero %d no existe en el arbol \n", dato);
         return raiz;
-    }    
-    // Si el numero si existe en el arbol
-    else {
+    } else {
         printf("El numero %d si existe en el arbol \n", dato);
         // Si el nodo a eliminar es la raiz
         if (raiz != NULL && dato == raiz->clave){
@@ -221,12 +217,11 @@ int main(void){
 
     RecorrerArbolEnOrden(Arbol);
     Nodo *resultado = BuscarDato(Arbol, 145);
-    //if si el dato fue encontrado o no
     if (resultado != NULL){
         printf("El numero %d fue encontrado en el arbol \n", resultado -> clave);
     } else {
-        printf("El numero no fue encontrado en el arbol \n");
-    }
-    //Llamar a la funcion de eliminar nodo con los parametros del arbol y el dato a eliminar
+        printf("El dato no fue encontrado en el arbol \n");
+    } 
+
     Arbol = EliminarNodo(Arbol, 5);
 }
