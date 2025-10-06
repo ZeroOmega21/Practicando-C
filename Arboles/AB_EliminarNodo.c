@@ -130,7 +130,7 @@ Nodo *EliminarNodoRaiz(Nodo *raiz, int dato){
         if (resultado -> left != NULL && resultado -> right != NULL){
             Nodo *minimo = MinimoValorNodo(resultado -> right);
             resultado -> clave = minimo -> clave;
-            resultado -> right = EliminarNodoHija(resultado -> right, minimo -> clave);
+            resultado -> right = EliminarNodoHoja(resultado -> right, minimo -> clave);
         } else if (resultado -> left != NULL){
             resultado = resultado -> left;
         } else if (resultado -> right != NULL){
