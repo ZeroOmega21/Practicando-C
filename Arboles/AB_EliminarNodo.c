@@ -121,9 +121,9 @@ Nodo *ElimninarNodoConUnHijo(Nodo *raiz, int dato){
         raiz->right = ElimninarNodoConUnHijo(raiz->right, dato);
     } else {
         // Nodo encontrado
-        Nodo *child = (raiz->left != NULL) ? raiz->left : raiz->right;
+        Nodo *Hijo = (raiz->left != NULL) ? raiz->left : raiz->right;
         free(raiz);
-        return child;
+        return Hijo;
     }
     return raiz;
 }
