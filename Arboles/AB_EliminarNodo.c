@@ -53,7 +53,7 @@ Nodo *InsetarDato(Nodo *arbol, int dato){
     return arbol;
 }  
 
-//
+//Recorrer el arbol en orden
 void RecorrerArbolEnOrden(Nodo *arbol){
     if (arbol != NULL){
         RecorrerArbolEnOrden(arbol -> left);
@@ -71,15 +71,8 @@ Nodo *MinimoValorNodo(Nodo *nodo){
     return actual;
 }
 
-Nodo *MaximoValorNodo(Nodo *nodo){
-    Nodo *actual = nodo;
-    while (actual && actual -> right != NULL){
-        actual = actual -> right;
-    }
-    return actual;
-}
-
 //Metodos de eliminar datos del arbol
+//eliminar nodo hoja
 Nodo *EliminarNodoHoja(Nodo *raiz, int dato){
     //buscar el nodo a eliminar
     if (dato < raiz->clave) {
@@ -95,6 +88,7 @@ Nodo *EliminarNodoHoja(Nodo *raiz, int dato){
     return raiz;
 }
 
+//eliminar nodo con hijos
 Nodo *EliminarNodoConHijos(Nodo *raiz, int dato){
     if (dato < raiz->clave) {
         raiz->left = EliminarNodoConHijos(raiz->left, dato);
@@ -119,6 +113,7 @@ Nodo *EliminarNodoConHijos(Nodo *raiz, int dato){
     return raiz;
 }
 
+//eliminar nodo con un hijo
 Nodo *ElimninarNodoConUnHijo(Nodo *raiz, int dato){
     if (dato < raiz->clave) {
         raiz->left = ElimninarNodoConUnHijo(raiz->left, dato);
@@ -133,6 +128,7 @@ Nodo *ElimninarNodoConUnHijo(Nodo *raiz, int dato){
     return raiz;
 }
 
+//Metodo para eliminar la raiz
 Nodo *EliminarNodoRaiz(Nodo *raiz){
     if (raiz == NULL) return NULL;
     // Si la raíz tiene dos hijos
@@ -154,6 +150,7 @@ Nodo *EliminarNodoRaiz(Nodo *raiz){
             if (padre->left == minimo) {
                 padre->left = minimo->right;
             }
+            // Reemplazar la raíz con el mínimo
             minimo->left = raiz->left;
             minimo->right = raiz->right;
             free(raiz);
@@ -208,21 +205,23 @@ Nodo *EliminarNodo(Nodo *raiz, int dato){
 
 //Metodo MAIN
 int main(void){
-    int arbol[14]={100, 50, 1, 55, 70, 120, 110, 105, 115, 140, 135, 132, 136, 145};
+    int arbol[]={100, 50, 1, 55, 70, 120, 110, 105, 115, 140, 135, 132, 136, 145};
     Nodo *Arbol = NULL;
     //crear el arbol en el for
-    for (int i = 0; i < 14; i++){
+    for (int i = 0; i < arbol; i++){
         Arbol = InsetarDato(Arbol, arbol[i]);
     }
-
+    //Mostrar el arbol
+    printf("Arbol en orden: \n");
     RecorrerArbolEnOrden(Arbol);
-    Nodo *resultado = BuscarDato(Arbol, 145);
-    //Verificar si el numero existe en el arbol o no
-    if (resultado != NULL){
-        printf("El numero %d fue encontrado en el arbol \n", resultado -> clave);
-    } else {
-        printf("El dato no fue encontrado en el arbol \n");
-    } 
-
-    Arbol = EliminarNodo(Arbol, 5);
+    
+    //Eliminar nodo cualquiera
+    Arbol = EliminarNodo(Arbol, 1);     //Nodo hoja
+    Arbol = EliminarNodo(Arbol, 55);    //Nodo con un hijo
+    Arbol = EliminarNodo(Arbol, 120);   //Nodo con dos hijos
+    Arbol = EliminarNodo(Arbol, 100);   //Eliminar la raiz
+    Arbol = EliminarNodo(Arbol, 5);     //Numero que no existe en el arbol
+    //Insertar un numero que ya fue eliminado
+    Arbol = InsetarDato(Arbol, 1);      //Volver a insertar el numero 1
+    RecorrerArbolEnOrden(Arbol);
 }
