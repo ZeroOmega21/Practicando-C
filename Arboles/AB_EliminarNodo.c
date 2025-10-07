@@ -62,7 +62,7 @@ void RecorrerArbolEnOrden(Nodo *arbol){
     }
 }
 
-//encontrar valores minimos y maximos
+//encontrar valores minimos
 Nodo *MinimoValorNodo(Nodo *nodo){
     Nodo *actual = nodo;
     while (actual && actual -> left != NULL){
