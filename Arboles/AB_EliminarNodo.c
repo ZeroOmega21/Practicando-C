@@ -172,6 +172,7 @@ Nodo *EliminarNodo(Nodo *raiz, int dato){
         return raiz;
     } else {
         printf("El numero %d si existe en el arbol \n", dato);
+        printf("Arbol despues de eliminar el numero %d: \n", dato);
         // Si el nodo a eliminar es la raiz
         if (raiz != NULL && dato == raiz->clave){
             Nodo *nuevo_raiz = EliminarNodoRaiz(raiz);
