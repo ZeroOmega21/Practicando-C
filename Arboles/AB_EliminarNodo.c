@@ -205,10 +205,10 @@ Nodo *EliminarNodo(Nodo *raiz, int dato){
 
 //Metodo MAIN
 int main(void){
-    int arbol[]={100, 50, 1, 55, 70, 120, 110, 105, 115, 140, 135, 132, 136, 145};
+    int arbol[14]={100, 50, 1, 55, 70, 120, 110, 105, 115, 140, 135, 132, 136, 145};
     Nodo *Arbol = NULL;
     //crear el arbol en el for
-    for (int i = 0; i < arbol; i++){
+    for (int i = 0; i < 14; i++){
         Arbol = InsetarDato(Arbol, arbol[i]);
     }
     //Mostrar el arbol
