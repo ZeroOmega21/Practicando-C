@@ -95,7 +95,7 @@ Nodo *EliminarNodoConHijos(Nodo *raiz, int dato){
     } else if (dato > raiz->clave) {
         raiz->right = EliminarNodoConHijos(raiz->right, dato);
     } else {
-        // Nodo encontrado
+        //Nodo encontrado
         if (raiz->left == NULL) {
             Nodo *temp = raiz->right;
             free(raiz);
@@ -120,7 +120,7 @@ Nodo *ElimninarNodoConUnHijo(Nodo *raiz, int dato){
     } else if (dato > raiz->clave) {
         raiz->right = ElimninarNodoConUnHijo(raiz->right, dato);
     } else {
-        // Nodo encontrado
+        //Nodo encontrado
         Nodo *Hijo = (raiz->left != NULL) ? raiz->left : raiz->right;
         free(raiz);
         return Hijo;
@@ -133,31 +133,31 @@ Nodo *EliminarNodoRaiz(Nodo *raiz){
     if (raiz == NULL) return NULL;
     // Si la raíz tiene dos hijos
     if (raiz->left != NULL && raiz->right != NULL) {
-        // Buscar el mínimo del subárbol derecho (el sucesor)
+        //Buscar el mínimo del subárbol derecho
         Nodo *minimo = MinimoValorNodo(raiz->right);
-        // Si el mínimo es el hijo derecho directo
+        //Si el mínimo es el hijo derecho directo
         if (raiz->right == minimo) {
             minimo->left = raiz->left;
             free(raiz);
             return minimo;
         } else {
-            // Buscar el padre del mínimo
+            //Buscar el padre del mínimo
             Nodo *padre = raiz->right;
             while (padre->left != NULL && padre->left != minimo) {
                 padre = padre->left;
             }
-            // Eliminar el mínimo del subárbol derecho
+            //Eliminar el mínimo del subárbol derecho
             if (padre->left == minimo) {
                 padre->left = minimo->right;
             }
-            // Reemplazar la raíz con el mínimo
+            //Reemplazar la raíz con el mínimo
             minimo->left = raiz->left;
             minimo->right = raiz->right;
             free(raiz);
             return minimo;
         }
     } else {
-        // Si tiene un solo hijo o ninguno, el hijo pasa a ser la nueva raíz
+        //Si tiene un solo hijo o ninguno, el hijo pasa a ser la nueva raíz
         Nodo *nuevo_raiz = (raiz->left != NULL) ? raiz->left : raiz->right;
         free(raiz);
         return nuevo_raiz;
@@ -173,7 +173,7 @@ Nodo *EliminarNodo(Nodo *raiz, int dato){
     } else {
         printf("El numero %d si existe en el arbol \n", dato);
         printf("Arbol despues de eliminar el numero %d: \n", dato);
-        // Si el nodo a eliminar es la raiz
+        //Si el nodo a eliminar es la raiz
         if (raiz != NULL && dato == raiz->clave){
             Nodo *nuevo_raiz = EliminarNodoRaiz(raiz);
             RecorrerArbolEnOrden(nuevo_raiz);
@@ -181,19 +181,19 @@ Nodo *EliminarNodo(Nodo *raiz, int dato){
         }
         Nodo *resultado = BuscarDato(raiz, dato);
         if (resultado != NULL) {
-            // Si el nodo a eliminar es una hoja
+            //Si el nodo a eliminar es una hoja
             if (resultado->left == NULL && resultado->right == NULL){
                 Nodo *nuevo_raiz = EliminarNodoHoja(raiz, dato);
                 RecorrerArbolEnOrden(nuevo_raiz);
                 return nuevo_raiz;
             }
-            // Si el nodo a eliminar tiene dos hijos
+            //Si el nodo a eliminar tiene dos hijos
             else if (resultado->left != NULL && resultado->right != NULL){
                 Nodo *nuevo_raiz = EliminarNodoConHijos(raiz, dato);
                 RecorrerArbolEnOrden(nuevo_raiz);
                 return nuevo_raiz;
             }
-            // Si el nodo a eliminar tiene un hijo
+            //Si el nodo a eliminar tiene un hijo
             else if (resultado->left != NULL || resultado->right != NULL){
                 Nodo *nuevo_raiz = ElimninarNodoConUnHijo(raiz, dato);
                 RecorrerArbolEnOrden(nuevo_raiz);
@@ -217,12 +217,15 @@ int main(void){
     RecorrerArbolEnOrden(Arbol);
     
     //Eliminar nodo cualquiera
+    
     Arbol = EliminarNodo(Arbol, 1);     //Nodo hoja
     Arbol = EliminarNodo(Arbol, 55);    //Nodo con un hijo
     Arbol = EliminarNodo(Arbol, 120);   //Nodo con dos hijos
     Arbol = EliminarNodo(Arbol, 100);   //Eliminar la raiz
     Arbol = EliminarNodo(Arbol, 5);     //Numero que no existe en el arbol
-    //Insertar un numero que ya fue eliminado
-    Arbol = InsetarDato(Arbol, 1);      //Volver a insertar el numero 1
+    
+    //insertar valor
+    Arbol = InsetarDato(Arbol, 40);      //Volver a insertar el numero 40
+    printf ("Arbol despues de volver a insertar el numero 40: \n");
     RecorrerArbolEnOrden(Arbol);
 }
